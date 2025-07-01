@@ -3,14 +3,18 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+const feedbackRouter = require("./routes/feedback");
+
 const app = express();
 const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/feedback", feedbackRouter);
+
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+  res.send("Backend is running");
 });
 
 mongoose
