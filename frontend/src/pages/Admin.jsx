@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { API_URL, SOCKET_URL } from "../api";
 
 const socket = io(SOCKET_URL);
-const PASSWORD_KEY = "admin_authenticated"; // LocalStorage 키
+const PASSWORD_KEY = "admin_authenticated";
 
 function AdminPage() {
   const [password, setPassword] = useState("");
@@ -13,7 +13,7 @@ function AdminPage() {
   );
   const [feedbacks, setFeedbacks] = useState([]);
 
-  const correctPassword = "1234"; // 🔥 원하는 비밀번호
+  const correctPassword = "1234";
 
   const fetchFeedbacks = async () => {
     const res = await axios.get(API_URL);
@@ -23,7 +23,7 @@ function AdminPage() {
   const handleLogin = () => {
     if (password === correctPassword) {
       setAuthenticated(true);
-      localStorage.setItem(PASSWORD_KEY, "true"); // ✅ 상태 저장
+      localStorage.setItem(PASSWORD_KEY, "true");
       fetchFeedbacks();
     } else {
       alert("비밀번호가 틀렸습니다.");
@@ -32,7 +32,7 @@ function AdminPage() {
 
   const handleLogout = () => {
     setAuthenticated(false);
-    localStorage.removeItem(PASSWORD_KEY); // ✅ 로그아웃 시 상태 삭제
+    localStorage.removeItem(PASSWORD_KEY);
   };
 
   const handleDelete = async (id) => {
@@ -55,7 +55,6 @@ function AdminPage() {
     }
   }, [authenticated]);
 
-  // 로그인 화면
   if (!authenticated) {
     return (
       <div
@@ -104,7 +103,11 @@ function AdminPage() {
               border: "none",
               borderRadius: "12px",
               cursor: "pointer",
+              fontSize: "16px",
+              transition: "all 0.3s",
             }}
+            onMouseOver={(e) => (e.target.style.backgroundColor = "#333")}
+            onMouseOut={(e) => (e.target.style.backgroundColor = "black")}
           >
             로그인
           </button>
@@ -113,7 +116,6 @@ function AdminPage() {
     );
   }
 
-  // 관리자 페이지
   return (
     <div
       style={{
@@ -152,6 +154,15 @@ function AdminPage() {
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: "10px",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.05)";
             }}
           >
             <div>{item.comment}</div>

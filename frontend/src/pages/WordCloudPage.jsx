@@ -6,7 +6,7 @@ import { API_URL, SOCKET_URL } from "../api";
 
 const socket = io(SOCKET_URL);
 
-// 시간 변환 함수
+// 시간 표시 함수
 const timeAgo = (dateString) => {
   const now = new Date();
   const date = new Date(dateString);
@@ -61,15 +61,15 @@ function WordCloudPage() {
         fontFamily: "Pretendard, sans-serif",
       }}
     >
-      {/* 타이틀 */}
       <h1
         style={{
           fontSize: "48px",
           marginBottom: "10px",
           textAlign: "center",
+          fontWeight: "700",
         }}
       >
-        경북소프트웨어 마이스터고 부스 체험
+        소감 워드클라우드
       </h1>
       <h3
         style={{
@@ -82,13 +82,12 @@ function WordCloudPage() {
         지금까지 <strong>{feedbacks.length}</strong>명이 소감을 작성했습니다.
       </h3>
 
-      {/* 메인 레이아웃 */}
       <div
         style={{
           display: "flex",
           gap: "20px",
           width: "100%",
-          maxWidth: "1400px", // 🔥 화면 꽉 차게
+          maxWidth: "1400px",
           justifyContent: "center",
           alignItems: "stretch",
           flexWrap: "wrap",
@@ -107,6 +106,15 @@ function WordCloudPage() {
             justifyContent: "center",
             alignItems: "center",
             height: "70vh",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow = "0 15px 25px rgba(0,0,0,0.15)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
           }}
         >
           <WordCloud words={words} options={options} />
@@ -139,7 +147,11 @@ function WordCloudPage() {
               >
                 {item.comment}
                 <div
-                  style={{ fontSize: "12px", color: "#999", marginTop: "4px" }}
+                  style={{
+                    fontSize: "12px",
+                    color: "#999",
+                    marginTop: "4px",
+                  }}
                 >
                   {timeAgo(item.createdAt)}
                 </div>

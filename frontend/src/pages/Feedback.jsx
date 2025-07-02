@@ -6,8 +6,8 @@ function Feedback() {
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [loading, setLoading] = useState(false);
 
-  // 화면 크기 감지해서 모바일인지 여부 판단
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -25,6 +25,7 @@ function Feedback() {
     }
 
     try {
+      setLoading(true);
       await axios.post(API_URL, {
         name: name.trim() === "" ? "익명" : name,
         comment: comment.trim(),
@@ -36,6 +37,8 @@ function Feedback() {
     } catch (error) {
       console.error("제출 에러:", error);
       alert("제출에 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,6 +53,7 @@ function Feedback() {
         backgroundColor: "#f9fafb",
         padding: "20px",
         fontFamily: "Pretendard, sans-serif",
+        transition: "all 0.3s",
       }}
     >
       <div
@@ -60,13 +64,23 @@ function Feedback() {
           borderRadius: "16px",
           padding: "24px",
           boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+          transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = "translateY(-2px)";
+          e.currentTarget.style.boxShadow = "0 15px 25px rgba(0,0,0,0.15)";
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = "translateY(0)";
+          e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
         }}
       >
         <h1
           style={{
             textAlign: "center",
             marginBottom: "20px",
-            fontSize: "32px",
+            fontSize: "36px",
+            fontWeight: "700",
           }}
         >
           소감 작성
@@ -93,10 +107,12 @@ function Feedback() {
                 borderRadius: "10px",
                 border: "1px solid #ddd",
                 boxSizing: "border-box",
+                transition: "border-color 0.3s",
               }}
+              onFocus={(e) => (e.target.style.borderColor = "#999")}
+              onBlur={(e) => (e.target.style.borderColor = "#ddd")}
             />
           </div>
-
           <div style={{ marginBottom: "16px", textAlign: "left" }}>
             <label
               style={{
@@ -119,24 +135,43 @@ function Feedback() {
                 borderRadius: "10px",
                 border: "1px solid #ddd",
                 boxSizing: "border-box",
+                resize: "none",
+                transition: "border-color 0.3s",
               }}
+              onFocus={(e) => (e.target.style.borderColor = "#999")}
+              onBlur={(e) => (e.target.style.borderColor = "#ddd")}
             />
           </div>
-
           <button
             type="submit"
+            disabled={loading}
             style={{
               width: "100%",
               padding: "14px",
-              backgroundColor: "black",
+              backgroundColor: loading ? "#555" : "black",
               color: "white",
               border: "none",
               borderRadius: "12px",
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               fontSize: "16px",
+              transition: "all 0.2s ease",
+              transform: loading ? "scale(0.98)" : "scale(1)",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+            }}
+            onMouseOver={(e) => {
+              if (!loading) e.target.style.backgroundColor = "#333";
+            }}
+            onMouseOut={(e) => {
+              if (!loading) e.target.style.backgroundColor = "black";
+            }}
+            onMouseDown={(e) => {
+              if (!loading) e.target.style.transform = "scale(0.96)";
+            }}
+            onMouseUp={(e) => {
+              if (!loading) e.target.style.transform = "scale(1)";
             }}
           >
-            제출
+            {loading ? "제출 중..." : "제출"}
           </button>
         </form>
       </div>
