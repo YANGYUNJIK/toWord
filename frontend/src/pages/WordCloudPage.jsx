@@ -6,7 +6,6 @@ import { API_URL, SOCKET_URL } from "../api";
 
 const socket = io(SOCKET_URL);
 
-// 시간 표시 함수
 const timeAgo = (dateString) => {
   const now = new Date();
   const date = new Date(dateString);
@@ -21,6 +20,7 @@ const timeAgo = (dateString) => {
 function WordCloudPage() {
   const [words, setWords] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
 
   const fetchData = async () => {
     const [wordsRes, feedbacksRes] = await Promise.all([
@@ -33,7 +33,6 @@ function WordCloudPage() {
 
   useEffect(() => {
     fetchData();
-
     socket.on("newFeedback", fetchData);
     socket.on("deleteFeedback", fetchData);
 
@@ -47,34 +46,71 @@ function WordCloudPage() {
     rotations: 2,
     rotationAngles: [-90, 0],
     fontSizes: [20, 70],
+    colors: darkMode
+      ? ["#90caf9", "#f48fb1", "#ce93d8", "#80cbc4", "#ffd54f"]
+      : ["#1976d2", "#d81b60", "#8e24aa", "#00897b", "#f9a825"],
   };
+
+  const backgroundColor = darkMode ? "#121212" : "#f9fafb";
+  const cardColor = darkMode ? "#1e1e1e" : "white";
+  const textColor = darkMode ? "#eeeeee" : "#111";
+  const subTextColor = darkMode ? "#aaaaaa" : "#666";
+  const borderColor = darkMode ? "#333" : "#eee";
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f9fafb",
+        backgroundColor: backgroundColor,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         padding: "20px",
         fontFamily: "Pretendard, sans-serif",
+        color: textColor,
+        transition: "all 0.3s ease",
       }}
     >
-      <h1
+      <div
         style={{
-          fontSize: "48px",
+          width: "100%",
+          maxWidth: "1400px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: "10px",
-          textAlign: "center",
-          fontWeight: "700",
         }}
       >
-        소감 워드클라우드
-      </h1>
+        <h1
+          style={{
+            fontSize: "48px",
+            marginBottom: "10px",
+            textAlign: "center",
+            fontWeight: "700",
+          }}
+        >
+          소감 워드클라우드
+        </h1>
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: darkMode ? "#333" : "#eee",
+            color: darkMode ? "#fff" : "#111",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            transition: "all 0.3s",
+          }}
+        >
+          {darkMode ? "☀️ 라이트 모드" : "🌙 다크 모드"}
+        </button>
+      </div>
+
       <h3
         style={{
           textAlign: "center",
-          color: "#666",
+          color: subTextColor,
           marginBottom: "20px",
           fontWeight: "normal",
         }}
@@ -98,10 +134,12 @@ function WordCloudPage() {
           style={{
             flex: "1 1 60%",
             minWidth: "500px",
-            backgroundColor: "white",
+            backgroundColor: cardColor,
             borderRadius: "16px",
             padding: "20px",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+            boxShadow: darkMode
+              ? "0 10px 20px rgba(255,255,255,0.05)"
+              : "0 10px 20px rgba(0,0,0,0.1)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -110,11 +148,15 @@ function WordCloudPage() {
           }}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow = "0 15px 25px rgba(0,0,0,0.15)";
+            e.currentTarget.style.boxShadow = darkMode
+              ? "0 15px 25px rgba(255,255,255,0.08)"
+              : "0 15px 25px rgba(0,0,0,0.15)";
           }}
           onMouseOut={(e) => {
             e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+            e.currentTarget.style.boxShadow = darkMode
+              ? "0 10px 20px rgba(255,255,255,0.05)"
+              : "0 10px 20px rgba(0,0,0,0.1)";
           }}
         >
           <WordCloud words={words} options={options} />
@@ -126,11 +168,14 @@ function WordCloudPage() {
             flex: "1 1 30%",
             minWidth: "300px",
             maxHeight: "70vh",
-            backgroundColor: "white",
+            backgroundColor: cardColor,
             borderRadius: "16px",
             padding: "20px",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+            boxShadow: darkMode
+              ? "0 10px 20px rgba(255,255,255,0.05)"
+              : "0 10px 20px rgba(0,0,0,0.1)",
             overflowY: "auto",
+            transition: "all 0.3s ease",
           }}
         >
           <h3 style={{ marginBottom: "10px" }}>최근 소감</h3>
@@ -141,7 +186,7 @@ function WordCloudPage() {
               <div
                 key={item._id}
                 style={{
-                  borderBottom: "1px solid #eee",
+                  borderBottom: `1px solid ${borderColor}`,
                   padding: "8px 0",
                 }}
               >
@@ -149,7 +194,7 @@ function WordCloudPage() {
                 <div
                   style={{
                     fontSize: "12px",
-                    color: "#999",
+                    color: subTextColor,
                     marginTop: "4px",
                   }}
                 >
