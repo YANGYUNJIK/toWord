@@ -1,8 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Feedback from "./pages/Feedback";
+import WordCloudPage from "./pages/WordCloudPage";
+import Admin from "./pages/Admin";
+
 function App() {
   return (
-    <div>
-      <h1>toWord Frontend is running!</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Feedback />} />
+        <Route path="/wordcloud" element={<WordCloudPage />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
