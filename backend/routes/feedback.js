@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Feedback = require("../models/Feedback");
 
-// POST - 소감 저장
+// ✅ 소감 저장
 router.post("/", async (req, res) => {
   try {
     const { name, comment } = req.body;
@@ -14,7 +14,19 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET - 전체 소감 조회
+// // DELETE - 소감 삭제
+// router.delete("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     await Feedback.findByIdAndDelete(id);
+//     res.json({ message: "삭제 완료" });
+//   } catch (error) {
+//     console.error("❌ 삭제 오류:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+// ✅ 전체 소감 조회
 router.get("/", async (req, res) => {
   try {
     const feedbacks = await Feedback.find().sort({ createdAt: -1 });
@@ -24,14 +36,39 @@ router.get("/", async (req, res) => {
   }
 });
 
-// DELETE - 소감 삭제
-router.delete("/:id", async (req, res) => {
+// ✅ 워드 클라우드용 데이터 반환
+router.get("/words", async (req, res) => {
   try {
-    await Feedback.findByIdAndDelete(req.params.id);
-    res.json({ message: "Feedback deleted" });
+    const feedbacks = await Feedback.find();
+    const allComments = feedbacks.map((item) => item.comment).join(" ");
+
+    const wordCounts = countWords(allComments);
+
+    const wordArray = Object.keys(wordCounts).map((word) => ({
+      text: word,
+      value: wordCounts[word],
+    }));
+
+    res.json(wordArray);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+// 단어 카운트 함수
+function countWords(text) {
+  const words = text
+    .replace(/[^\w\sㄱ-ㅎ가-힣]/g, "")
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((word) => word.length >= 1);
+
+  const counts = {};
+  words.forEach((word) => {
+    counts[word] = (counts[word] || 0) + 1;
+  });
+
+  return counts;
+}
 
 module.exports = router;

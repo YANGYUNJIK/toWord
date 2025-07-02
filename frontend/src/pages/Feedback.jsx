@@ -14,16 +14,17 @@ function Feedback() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/feedback", {
-        name: name.trim() === "" ? "익명" : name,
-        comment: comment.trim(),
+      const response = await axios.post("/api/feedback", {
+        name,
+        comment,
       });
 
+      console.log(response.data);
       alert("소감이 제출되었습니다!");
       setName("");
       setComment("");
     } catch (error) {
-      console.error(error);
+      console.error("제출 에러:", error);
       alert("제출에 실패했습니다.");
     }
   };
