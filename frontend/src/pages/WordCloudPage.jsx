@@ -74,6 +74,5 @@ function WordCloudPage() {
       </div>
     </div>
   );
-}
-
+} //
 export default WordCloudPage;
