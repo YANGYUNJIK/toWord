@@ -8,7 +8,6 @@ function Feedback() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (comment.trim() === "") {
       alert("소감은 필수입니다!");
       return;
@@ -19,13 +18,12 @@ function Feedback() {
         name: name.trim() === "" ? "익명" : name,
         comment: comment.trim(),
       });
-
       alert("소감이 제출되었습니다!");
       setName("");
       setComment("");
     } catch (error) {
-      console.error("제출 에러:", error);
-      alert("제출에 실패했습니다.");
+      console.error(error);
+      alert("제출 실패");
     }
   };
 
@@ -38,8 +36,8 @@ function Feedback() {
           <input
             type="text"
             value={name}
-            placeholder="이름을 입력하세요"
             onChange={(e) => setName(e.target.value)}
+            placeholder="이름을 입력하세요"
             style={{
               width: "100%",
               padding: "12px",
@@ -53,8 +51,8 @@ function Feedback() {
           <label>소감 (필수)</label>
           <textarea
             value={comment}
-            placeholder="소감을 입력해주세요"
             onChange={(e) => setComment(e.target.value)}
+            placeholder="소감을 입력하세요"
             rows="4"
             style={{
               width: "100%",

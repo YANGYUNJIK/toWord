@@ -31,7 +31,7 @@ function AdminPage() {
       const res = await axios.get(API_URL);
       setFeedbacks(res.data);
     } catch (error) {
-      console.error("데이터 불러오기 실패:", error);
+      console.error(error);
     }
   };
 
@@ -43,7 +43,7 @@ function AdminPage() {
       await axios.delete(`${API_URL}/${id}`);
       fetchFeedbacks();
     } catch (error) {
-      console.error("삭제 실패:", error);
+      console.error(error);
     }
   };
 
@@ -76,44 +76,36 @@ function AdminPage() {
   return (
     <div style={{ maxWidth: "800px", margin: "50px auto" }}>
       <h1>소감 목록 (관리자)</h1>
-      <button
-        onClick={handleLogout}
-        style={{ float: "right", marginBottom: "10px" }}
-      >
+      <button onClick={handleLogout} style={{ float: "right" }}>
         로그아웃
       </button>
-
-      {feedbacks.length === 0 ? (
-        <p>현재 소감이 없습니다.</p>
-      ) : (
-        feedbacks.map((item) => (
-          <div
-            key={item._id}
+      {feedbacks.map((item) => (
+        <div
+          key={item._id}
+          style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+            marginBottom: "10px",
+            borderRadius: "8px",
+          }}
+        >
+          <strong>{item.name}</strong>: {item.comment}
+          <button
+            onClick={() => handleDelete(item._id)}
             style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-              borderRadius: "8px",
+              marginLeft: "10px",
+              padding: "4px 10px",
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+              borderRadius: "5px",
             }}
           >
-            <strong>{item.name}</strong>: {item.comment}
-            <button
-              onClick={() => handleDelete(item._id)}
-              style={{
-                marginLeft: "10px",
-                padding: "4px 10px",
-                backgroundColor: "red",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-                borderRadius: "5px",
-              }}
-            >
-              삭제
-            </button>
-          </div>
-        ))
-      )}
+            삭제
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
