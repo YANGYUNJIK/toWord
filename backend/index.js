@@ -56,7 +56,8 @@ mongoose.connection.on("error", (err) => {
 });
 
 // 서버 실행
-const PORT = 5000;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 5000; // ✅ 반드시 이렇게!
+
+app.listen(PORT, () => {
   console.log(`✅ Server is running at http://localhost:${PORT}`);
 });
