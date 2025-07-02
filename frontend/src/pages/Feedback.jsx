@@ -72,8 +72,14 @@ function Feedback() {
           소감 작성
         </h1>
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "6px" }}>
+          <div style={{ marginBottom: "16px", textAlign: "left" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "6px",
+                fontWeight: "500",
+              }}
+            >
               이름 (선택)
             </label>
             <input
@@ -86,11 +92,19 @@ function Feedback() {
                 padding: "12px",
                 borderRadius: "10px",
                 border: "1px solid #ddd",
+                boxSizing: "border-box",
               }}
             />
           </div>
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "6px" }}>
+
+          <div style={{ marginBottom: "16px", textAlign: "left" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "6px",
+                fontWeight: "500",
+              }}
+            >
               소감 (필수)
             </label>
             <textarea
@@ -104,9 +118,11 @@ function Feedback() {
                 padding: "12px",
                 borderRadius: "10px",
                 border: "1px solid #ddd",
+                boxSizing: "border-box",
               }}
             />
           </div>
+
           <button
             type="submit"
             style={{
