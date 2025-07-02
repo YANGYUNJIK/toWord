@@ -11,6 +11,11 @@ router.post("/", async (req, res) => {
       comment: comment.trim(),
     });
     await feedback.save();
+
+    // 🔥 소켓으로 update 신호 보내기
+    const io = req.app.get("io");
+    io.emit("update"); // 모든 클라이언트에 업데이트 신호
+
     res.status(201).json({ message: "Feedback saved" });
   } catch (error) {
     console.error("❌ 저장 오류:", error);

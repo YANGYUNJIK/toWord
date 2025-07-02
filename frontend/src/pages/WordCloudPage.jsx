@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import WordCloud from "react-wordcloud";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 function WordCloudPage() {
   const [words, setWords] = useState([]);
@@ -15,13 +16,26 @@ function WordCloudPage() {
   };
 
   useEffect(() => {
-    fetchWords(); // 최초 로드
+    fetchWords();
 
-    const interval = setInterval(() => {
+    const socket = io("http://localhost:5000"); // 🔥 백엔드 소켓 연결
+
+    socket.on("connect", () => {
+      console.log("🟢 소켓 연결됨:", socket.id);
+    });
+
+    socket.on("update", () => {
+      console.log("🆕 워드클라우드 데이터 갱신");
       fetchWords();
-    }, 5000); // 🔥 5초마다 갱신
+    });
 
-    return () => clearInterval(interval); // 언마운트 시 정리
+    socket.on("disconnect", () => {
+      console.log("🔴 소켓 연결 해제");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   const options = {
