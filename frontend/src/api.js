@@ -1,1 +1,1 @@
-export const API_URL = "https://https://toword.onrender.com/api/feedback";
+export const API_URL = "https://toword.onrender.com/api/feedback";
