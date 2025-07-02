@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import WordCloud from "react-wordcloud";
 import axios from "axios";
 
 function WordCloudPage() {
   const [words, setWords] = useState([]);
 
-  useEffect(() => {
-    const fetchWords = async () => {
-      try {
-        const res = await axios.get("/api/feedback/words");
-        setWords(res.data);
-      } catch (error) {
-        console.error("❌ 워드클라우드 데이터 불러오기 실패:", error);
-      }
-    };
+  const fetchWords = async () => {
+    try {
+      const res = await axios.get("/api/feedback/words");
+      setWords(res.data);
+    } catch (error) {
+      console.error("워드클라우드 로딩 실패:", error);
+    }
+  };
 
-    fetchWords();
+  useEffect(() => {
+    fetchWords(); // 최초 로드
+
+    const interval = setInterval(() => {
+      fetchWords();
+    }, 5000); // 🔥 5초마다 갱신
+
+    return () => clearInterval(interval); // 언마운트 시 정리
   }, []);
 
   const options = {
