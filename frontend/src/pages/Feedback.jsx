@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../api";
 
 function Feedback() {
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // 화면 크기 감지해서 모바일인지 여부 판단
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,8 +34,8 @@ function Feedback() {
       setName("");
       setComment("");
     } catch (error) {
-      console.error(error);
-      alert("제출 실패");
+      console.error("제출 에러:", error);
+      alert("제출에 실패했습니다.");
     }
   };
 
@@ -33,10 +43,11 @@ function Feedback() {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f9fafb",
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
+        justifyContent: isMobile ? "flex-start" : "center",
         alignItems: "center",
+        backgroundColor: "#f9fafb",
         padding: "20px",
         fontFamily: "Pretendard, sans-serif",
       }}
@@ -46,12 +57,20 @@ function Feedback() {
           width: "100%",
           maxWidth: "500px",
           backgroundColor: "white",
-          padding: "30px",
           borderRadius: "16px",
+          padding: "24px",
           boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
         }}
       >
-        <h1 style={{ textAlign: "center", marginBottom: "20px" }}>소감 작성</h1>
+        <h1
+          style={{
+            textAlign: "center",
+            marginBottom: "20px",
+            fontSize: "32px",
+          }}
+        >
+          소감 작성
+        </h1>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: "16px" }}>
             <label style={{ display: "block", marginBottom: "6px" }}>
@@ -59,15 +78,14 @@ function Feedback() {
             </label>
             <input
               type="text"
-              placeholder="이름을 입력하세요"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder="이름을 입력하세요"
               style={{
                 width: "100%",
                 padding: "12px",
                 borderRadius: "10px",
                 border: "1px solid #ddd",
-                fontSize: "16px",
               }}
             />
           </div>
@@ -76,17 +94,16 @@ function Feedback() {
               소감 (필수)
             </label>
             <textarea
-              placeholder="소감을 입력하세요"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              rows="5"
+              rows="4"
+              placeholder="소감을 입력하세요"
+              required
               style={{
                 width: "100%",
                 padding: "12px",
                 borderRadius: "10px",
                 border: "1px solid #ddd",
-                fontSize: "16px",
-                resize: "none",
               }}
             />
           </div>
@@ -101,10 +118,9 @@ function Feedback() {
               borderRadius: "12px",
               cursor: "pointer",
               fontSize: "16px",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
             }}
           >
-            제출하기
+            제출
           </button>
         </form>
       </div>
