@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { API_URL } from "../api";
 
 function AdminPage() {
   const [password, setPassword] = useState("");
@@ -8,12 +9,12 @@ function AdminPage() {
   );
   const [feedbacks, setFeedbacks] = useState([]);
 
-  const correctPassword = "1234"; // 🔥 비밀번호
+  const correctPassword = "1234";
 
   const handleLogin = () => {
     if (password === correctPassword) {
       setAuthenticated(true);
-      localStorage.setItem("admin-auth", "true"); // ✅ 인증 상태 저장
+      localStorage.setItem("admin-auth", "true");
       fetchFeedbacks();
     } else {
       alert("비밀번호가 틀렸습니다.");
@@ -21,13 +22,13 @@ function AdminPage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("admin-auth"); // ✅ 인증 상태 제거
+    localStorage.removeItem("admin-auth");
     setAuthenticated(false);
   };
 
   const fetchFeedbacks = async () => {
     try {
-      const res = await axios.get("/api/feedback");
+      const res = await axios.get(API_URL);
       setFeedbacks(res.data);
     } catch (error) {
       console.error("데이터 불러오기 실패:", error);
@@ -39,7 +40,7 @@ function AdminPage() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`/api/feedback/${id}`);
+      await axios.delete(`${API_URL}/${id}`);
       fetchFeedbacks();
     } catch (error) {
       console.error("삭제 실패:", error);
@@ -55,14 +56,7 @@ function AdminPage() {
   if (!authenticated) {
     return (
       <div
-        style={{
-          maxWidth: "400px",
-          margin: "100px auto",
-          textAlign: "center",
-          border: "1px solid #ccc",
-          padding: "30px",
-          borderRadius: "10px",
-        }}
+        style={{ maxWidth: "400px", margin: "100px auto", textAlign: "center" }}
       >
         <h2>관리자 로그인</h2>
         <input
@@ -72,17 +66,7 @@ function AdminPage() {
           onChange={(e) => setPassword(e.target.value)}
           style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
         />
-        <button
-          onClick={handleLogin}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#333",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            borderRadius: "5px",
-          }}
-        >
+        <button onClick={handleLogin} style={{ padding: "10px 20px" }}>
           로그인
         </button>
       </div>
@@ -94,15 +78,7 @@ function AdminPage() {
       <h1>소감 목록 (관리자)</h1>
       <button
         onClick={handleLogout}
-        style={{
-          padding: "6px 14px",
-          backgroundColor: "gray",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          float: "right",
-        }}
+        style={{ float: "right", marginBottom: "10px" }}
       >
         로그아웃
       </button>

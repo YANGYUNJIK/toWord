@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { API_URL } from "../api";
 
 function Feedback() {
   const [name, setName] = useState("");
@@ -14,12 +15,11 @@ function Feedback() {
     }
 
     try {
-      const response = await axios.post("/api/feedback", {
-        name,
-        comment,
+      await axios.post(API_URL, {
+        name: name.trim() === "" ? "익명" : name,
+        comment: comment.trim(),
       });
 
-      console.log(response.data);
       alert("소감이 제출되었습니다!");
       setName("");
       setComment("");
@@ -30,47 +30,54 @@ function Feedback() {
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "50px auto" }}>
-      <h1>소감 작성</h1>
+    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
+      <h1 style={{ textAlign: "center" }}>소감 작성</h1>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: "20px" }}>
           <label>이름 (선택)</label>
           <input
             type="text"
             value={name}
+            placeholder="이름을 입력하세요"
             onChange={(e) => setName(e.target.value)}
             style={{
               width: "100%",
-              padding: "8px",
-              marginTop: "5px",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              marginTop: "8px",
             }}
           />
         </div>
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: "20px" }}>
           <label>소감 (필수)</label>
           <textarea
             value={comment}
+            placeholder="소감을 입력해주세요"
             onChange={(e) => setComment(e.target.value)}
             rows="4"
-            required
             style={{
               width: "100%",
-              padding: "8px",
-              marginTop: "5px",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              marginTop: "8px",
             }}
           />
         </div>
         <button
           type="submit"
           style={{
-            padding: "10px 20px",
-            backgroundColor: "black",
+            width: "100%",
+            padding: "14px",
+            backgroundColor: "#4D96FF",
             color: "white",
             border: "none",
+            borderRadius: "8px",
             cursor: "pointer",
           }}
         >
-          제출
+          제출하기
         </button>
       </form>
     </div>
