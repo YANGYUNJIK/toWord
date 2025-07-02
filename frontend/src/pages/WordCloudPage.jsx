@@ -69,7 +69,7 @@ function WordCloudPage() {
           textAlign: "center",
         }}
       >
-        소감 워드클라우드
+        경북소프트웨어 마이스터고 부스 체험
       </h1>
       <h3
         style={{

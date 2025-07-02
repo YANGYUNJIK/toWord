@@ -4,13 +4,16 @@ import { io } from "socket.io-client";
 import { API_URL, SOCKET_URL } from "../api";
 
 const socket = io(SOCKET_URL);
+const PASSWORD_KEY = "admin_authenticated"; // LocalStorage 키
 
 function AdminPage() {
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(
+    localStorage.getItem(PASSWORD_KEY) === "true"
+  );
   const [feedbacks, setFeedbacks] = useState([]);
 
-  const correctPassword = "1234";
+  const correctPassword = "1234"; // 🔥 원하는 비밀번호
 
   const fetchFeedbacks = async () => {
     const res = await axios.get(API_URL);
@@ -20,10 +23,16 @@ function AdminPage() {
   const handleLogin = () => {
     if (password === correctPassword) {
       setAuthenticated(true);
+      localStorage.setItem(PASSWORD_KEY, "true"); // ✅ 상태 저장
       fetchFeedbacks();
     } else {
       alert("비밀번호가 틀렸습니다.");
     }
+  };
+
+  const handleLogout = () => {
+    setAuthenticated(false);
+    localStorage.removeItem(PASSWORD_KEY); // ✅ 로그아웃 시 상태 삭제
   };
 
   const handleDelete = async (id) => {
@@ -35,6 +44,7 @@ function AdminPage() {
 
   useEffect(() => {
     if (authenticated) {
+      fetchFeedbacks();
       socket.on("newFeedback", fetchFeedbacks);
       socket.on("deleteFeedback", fetchFeedbacks);
 
@@ -45,6 +55,7 @@ function AdminPage() {
     }
   }, [authenticated]);
 
+  // 로그인 화면
   if (!authenticated) {
     return (
       <div
@@ -102,6 +113,7 @@ function AdminPage() {
     );
   }
 
+  // 관리자 페이지
   return (
     <div
       style={{
@@ -111,13 +123,23 @@ function AdminPage() {
         fontFamily: "Pretendard, sans-serif",
       }}
     >
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>소감 목록</h1>
-      <div
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1 style={{ marginBottom: "20px" }}>소감 목록 (관리자)</h1>
+        <button
+          onClick={handleLogout}
+          style={{
+            height: "40px",
+            padding: "0 20px",
+            backgroundColor: "#eee",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          로그아웃
+        </button>
+      </div>
+      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         {feedbacks.map((item) => (
           <div
             key={item._id}
@@ -132,9 +154,7 @@ function AdminPage() {
               marginBottom: "10px",
             }}
           >
-            <div>
-              <strong>{item.name}</strong>: {item.comment}
-            </div>
+            <div>{item.comment}</div>
             <button
               onClick={() => handleDelete(item._id)}
               style={{
