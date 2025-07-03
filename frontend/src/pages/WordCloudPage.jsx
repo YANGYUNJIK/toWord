@@ -89,7 +89,7 @@ function WordCloudPage() {
             fontWeight: "700",
           }}
         >
-          소감 워드클라우드
+          경북소프트웨어마이스터고 부스 체험
         </h1>
         <button
           onClick={() => setDarkMode(!darkMode)}
