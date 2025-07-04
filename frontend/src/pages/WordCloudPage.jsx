@@ -87,6 +87,7 @@ function WordCloudPage() {
             marginBottom: "10px",
             textAlign: "center",
             fontWeight: "700",
+            width: "100%", // ✅ 이 줄만 추가하면 중앙 정렬됩니다
           }}
         >
           경북소프트웨어마이스터고 부스 체험
