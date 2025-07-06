@@ -102,6 +102,7 @@ function WordCloudPage() {
             borderRadius: "8px",
             cursor: "pointer",
             transition: "all 0.3s",
+            whiteSpace: "nowrap"
           }}
         >
           {darkMode ? "☀️ 라이트 모드" : "🌙 다크 모드"}
