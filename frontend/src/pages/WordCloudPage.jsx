@@ -32,15 +32,24 @@ function WordCloudPage() {
   };
 
   useEffect(() => {
-    fetchData();
-    socket.on("newFeedback", fetchData);
-    socket.on("deleteFeedback", fetchData);
+  fetchData();
+  socket.on("newFeedback", fetchData);
+  socket.on("deleteFeedback", fetchData);
 
-    return () => {
-      socket.off("newFeedback", fetchData);
-      socket.off("deleteFeedback", fetchData);
-    };
-  }, []);
+  // ✅ 바디 배경색 동적 설정
+  document.body.style.backgroundColor = darkMode ? "#121212" : "#f9fafb";
+
+  return () => {
+    socket.off("newFeedback", fetchData);
+    socket.off("deleteFeedback", fetchData);
+  };
+}, []);
+
+useEffect(() => {
+  // ✅ 다크모드 변경 시마다 바디 색상도 갱신
+  document.body.style.backgroundColor = darkMode ? "#121212" : "#f9fafb";
+}, [darkMode]);
+
 
   const options = {
     rotations: 2,
